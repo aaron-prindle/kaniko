@@ -30,6 +30,9 @@ RUN mkdir -p /kaniko/.docker
 
 COPY . .
 
+# TODO(aaron-prindle) REMOVE - specific to google-cloud-auth
+COPY google-cloud-auth /kaniko/google-cloud-auth
+
 #  dependencies https://github.com/golang/go/issues/48332
 
 # The versions of these tools and their transitive dependencies are controlled via go.mod.
@@ -102,6 +105,10 @@ ENTRYPOINT ["/kaniko/executor"]
 FROM kaniko-executor AS kaniko-debug
 
 ENV PATH /usr/local/bin:/kaniko:/busybox
+
+# TODO(aaron-prindle) DEBUG - added for google-cloud-auth
+
+COPY --from=builder /kaniko/google-cloud-auth /kaniko/google-cloud-auth
 
 COPY --from=builder /src/out/warmer /kaniko/warmer
 
